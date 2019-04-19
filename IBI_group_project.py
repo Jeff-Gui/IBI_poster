@@ -24,12 +24,9 @@ def GC_content(x):
 #------------------------------------------------------------------------------
 
 def cplmty(x):
-    dic = {'A':'T','T':'A','C':'G','G':'C'}
-    cm = ''
-    for base in x:
-        cm += dic[base]
-    cm = cm[::-1]
-    print('Complementary DNA strand (5\' to 3\'):\n', cm)
+    DNA=x.replace('G','c').replace('C','g').replace('A','t').replace('T','a')
+    DNA=DNA[::-1]
+    print('Complementary DNA strand (5\' to 3\'):\n', DNA.upper(), sep='')
 
 #------------------------------------------------------------------------------
 
@@ -39,7 +36,7 @@ def mrna(x):
     for base in x:
         mrna += dic2[base]
     mrna = mrna[::-1]
-    print('mRNA sequence is:\n', mrna)
+    print('mRNA sequence is:\n', mrna, sep='')
 
 #------------------------------------------------------------------------------
 def dtp(x):
@@ -49,7 +46,7 @@ def dtp(x):
             p += pdbs[dic3[x[i]], dic3[x[i+1]], dic3[x[i+2]]]
             if p[-1] == '*':
                 break
-        print('Peptide translated from mRNA is:\n', p[:-1])
+        print('Peptide translated from mRNA is:\n', p[:-1], sep='')
     else:
         print('Cannot find initiation codon!')
 #------------------------------------------------------------------------------
