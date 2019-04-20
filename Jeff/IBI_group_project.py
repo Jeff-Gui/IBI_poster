@@ -96,5 +96,3 @@ def inpt():
             inpt()
             break
 #----------------------
-a = 'ATGGTGTGAGGTGC'
-a.find('AGGTT')
