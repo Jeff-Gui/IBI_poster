@@ -14,16 +14,19 @@ import re
 seq = ''
 opt = ''
 opt2 = ''
+s = 0
 #-----------------------------MAIN FUNCTION------------------------------------
 def ui():
     global seq
     global opt
     global opt2
+    global s
     print('Select your task:\n[1]:GC content calculation [2]:complementary sequence [3]:mRNA [4]:peptide [5]:hydropathy [0]:exit', end='')
     opt = input('')
     ckopt()
     if opt == 0:
-        return False
+        s = 1
+        return
     elif opt == 4:
         print('Input your mRNA sequence:',end='')
         seq = input('')
@@ -39,7 +42,7 @@ def ui():
         print('Input your DNA sequence',end='')
         seq = input('')
         ckdna()
-    return True
+    return 
 #------------------------------------------------------------------------------
 def ckopt():
     """
@@ -121,5 +124,5 @@ def ckpt():
     return True
 
 #---------------------------EXECUTE--------------------------------------------
-while ui():
+while s==0:
     ui()
