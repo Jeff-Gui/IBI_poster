@@ -37,7 +37,10 @@ def ui():
         ckopt2()
         print('Input your sequence:',end='')
         seq = input('')
-        ckmrna()
+        if opt2==1:
+            ckpt()
+        else:
+            ckmrna()
     elif opt in {1,2,3}:
         print('Input your DNA sequence',end='')
         seq = input('')
@@ -95,10 +98,17 @@ def ckmrna():
         2. if sequence length is 3n, then it is 'part' of a whole peptide
     """
     global seq
-    p = re.findall('AUG[AUCG]*(UAA)|AUG[AUCG]*(UAG)|AUG[AUCG]*(UGA)', seq) #only consider one initial condon and one stop condon
+    p = re.findall('AUG[AUCG]*|AUG[AUCG]*|AUG[AUCG]*', seq) #only consider one initial condon and one stop condon
     try:
         seq = p[0]
-        return True
+        seq2 = seq[::-1] #find the last pattern of "stop condon", if 3* length in between, then valid
+        if (len(seq)-seq2.find('GAU'))%3==0 or (len(seq)-seq2.find('AAU'))%3==0 or (len(seq)-seq2.find('AGU'))%3==0:
+            return True
+        else:
+            print('Please input the correct mRNA sequence:', end='')
+            seq = input('')
+            if not ckmrna():
+                return False
     except:         #if sequence length is times of 3
         if len(seq)%3==0 and not re.search('[^AUCG]',seq): #assume that sequence is meaningful(can be translated)
             return True
