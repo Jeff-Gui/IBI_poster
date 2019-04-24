@@ -15,36 +15,41 @@ seq = ''
 opt = ''
 opt2 = ''
 s = 0
+t = 0
 #-----------------------------MAIN FUNCTION------------------------------------
 def ui():
     global seq
     global opt
     global opt2
     global s
+    global t
     print('Select your task:\n[1]:GC content calculation [2]:complementary sequence [3]:mRNA [4]:peptide [5]:hydropathy [0]:exit', end='')
     opt = input('')
     ckopt()
+    if t == 0:
+        print('Input your sequence:',end='')
+        seq = input('')
+        t = 1
     if opt == 0:
         s = 1
         return
     elif opt == 4:
-        print('Input your mRNA sequence:',end='')
-        seq = input('')
         ckmrna()
     elif opt == 5:
         print('Select your sequence type:\n[1]: protein sequence [2]mRNA sequence',end='')
         opt2 = input('')
         ckopt2()
-        print('Input your sequence:',end='')
-        seq = input('')
         if opt2==1:
             ckpt()
         else:
             ckmrna()
     elif opt in {1,2,3}:
-        print('Input your DNA sequence',end='')
-        seq = input('')
         ckdna()
+    print('Keep your sequence? Y/N',end='')
+    p = input('')
+    if p == 'n':
+        seq = ''
+        t = 0
     return 
 #------------------------------------------------------------------------------
 def ckopt():
