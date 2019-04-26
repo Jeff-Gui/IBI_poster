@@ -71,14 +71,14 @@ def ui():
     print('Select your task:\n[1]:GC content calculation [2]:complementary sequence [3]:mRNA [4]:peptide [5]:hydropathy [0]:exit', end='')
     opt = input('')
     ckopt()
+    if opt == 0:
+        s = 1
+        return
     if t == 0:
         print('Input your sequence:',end='')
         seq = input('')
         t = 1
-    if opt == 0:
-        s = 1
-        return
-    elif opt == 4:
+    if opt == 4:
         ckmrna()
         dtp(seq)
     elif opt == 5:
