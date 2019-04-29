@@ -68,15 +68,13 @@ def ui():
     global opt2
     global s
     global t
-    print('Select your task:\n[1]:GC content calculation [2]:complementary sequence [3]:mRNA [4]:peptide [5]:hydropathy [0]:exit', end='')
-    opt = input('')
+    opt = input('Select your task:\n[1]:GC content calculation [2]:complementary sequence [3]:mRNA [4]:peptide [5]:hydropathy [0]:exit\n')
     ckopt()
     if opt == 0:
         s = 1
         return
     if t == 0:
-        print('Input your sequence:',end='')
-        seq = input('')
+        seq = input('Input your sequence:\n')
         t = 1
     if opt == 4:
         ckmrna()
@@ -110,8 +108,7 @@ def ckopt():
     """
     global opt
     if re.search('[^123450]',opt):
-        print('Please input the correct number:',end='')
-        opt = input('')
+        opt = input('Please input the correct number:\n')
         if not ckopt():
             return False
     else:
@@ -124,8 +121,7 @@ def ckopt2():
     """
     global opt2
     if re.search('[^12]',opt2):
-        print('Please input the correct number:',end='')
-        opt2 = input('')
+        opt2 = input('Please input the correct number:\n')
         if not ckopt2():
             return False
     else:
@@ -139,8 +135,7 @@ def ckdna():
     """
     global seq
     if re.search('[^ATCG]', seq):
-        print('Please input the correct DNA sequence:', end='')
-        seq = input('')
+        seq = input('Please input the correct DNA sequence:\n')
         if not ckdna():
             return False
     else:
@@ -162,16 +157,14 @@ def ckmrna():
         if (len(seq)-seq2.find('GAU'))%3==0 or (len(seq)-seq2.find('AAU'))%3==0 or (len(seq)-seq2.find('AGU'))%3==0:
             return True
         else:
-            print('Please input the correct mRNA sequence:', end='')
-            seq = input('')
+            seq = input('Please input the correct mRNA sequence:\n')
             if not ckmrna():
                 return False
     except:         #if sequence length is times of 3
         if len(seq)%3==0 and not re.search('[^AUCG]',seq): #assume that sequence is meaningful(can be translated)
             return True
         else:
-            print('Please input the correct mRNA sequence:', end='')
-            seq = input('')
+            seq = input('Please input the correct mRNA sequence:')
             if not ckmrna():
                 return False
     return True
@@ -182,8 +175,7 @@ def ckpt():
     """
     global seq
     if re.search('[^GAVLIMFWPSTCYNQDEKRH]',seq):
-        print('Please input the correct protein sequence:', end='')
-        seq = input('')
+        seq = input('Please input the correct protein sequence:\n')
         if not ckpt():
             return False
     else:
