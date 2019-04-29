@@ -95,8 +95,7 @@ def ui():
             cplmty(seq)
         else:
             mrna(seq)
-    print('Keep your sequence? Y/N',end='')
-    p = input('')
+    p = input('Keep your sequence? Y/N\n')
     if p == 'n':
         seq = ''
         t = 0
@@ -164,7 +163,7 @@ def ckmrna():
         if len(seq)%3==0 and not re.search('[^AUCG]',seq): #assume that sequence is meaningful(can be translated)
             return True
         else:
-            seq = input('Please input the correct mRNA sequence:')
+            seq = input('Please input the correct mRNA sequence:\n')
             if not ckmrna():
                 return False
     return True
