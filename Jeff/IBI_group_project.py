@@ -3,7 +3,7 @@
 """
 Created on Fri Apr  5 23:07:33 2019
 
-@author: jefft
+@author: IBI group 1
 """
 import re
 import numpy as np   
@@ -50,6 +50,10 @@ def dtp(x):
     else:
         print('Cannot find initiation codon!')
 #------------------------------------------------------------------------------
+def tfs():
+    global seq
+    
+#------------------------------------------------------------------------------
 """
 UI
 This recursion function provides a user-friendly console interface.
@@ -68,7 +72,7 @@ def ui():
     global opt2
     global s
     global t
-    opt = input('Select your task:\n[1]:GC content calculation [2]:complementary sequence [3]:mRNA [4]:peptide [5]:hydropathy [0]:exit\n')
+    opt = input('Select your task:\n[1]:GC content calculation [2]:Complementary sequence [3]:mRNA [4]:Peptide [5]:Transcription factor search [0]:Exit\n')
     ckopt()
     if opt == 0:
         s = 1
@@ -79,22 +83,16 @@ def ui():
     if opt == 4:
         ckmrna()
         dtp(seq)
-    elif opt == 5:
-        print('Select your sequence type:\n[1]: protein sequence [2]mRNA sequence',end='')
-        opt2 = input('')
-        ckopt2()
-        if opt2==1:
-            ckpt()
-        else:
-            ckmrna()
-    elif opt in {1,2,3}:
+    elif opt in {1,2,3,5}:
         ckdna()
         if opt==1:
             GC_content(seq)
         elif opt==2:
             cplmty(seq)
-        else:
+        elif opt==3:
             mrna(seq)
+        else:
+            tfs()
     p = input('Keep your sequence? Y/N\n')
     if p == 'n':
         seq = ''
@@ -114,19 +112,6 @@ def ckopt():
         opt = int(opt)
     return True
  
-def ckopt2():
-    """
-    check the number input when selecting sequence type in task 5
-    """
-    global opt2
-    if re.search('[^12]',opt2):
-        opt2 = input('Please input the correct number:\n')
-        if not ckopt2():
-            return False
-    else:
-        opt2 = int(opt2)
-    return True
-       
 def ckdna():
     """
     check DNA
