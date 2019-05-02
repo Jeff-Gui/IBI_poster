@@ -49,7 +49,8 @@ for t in range(0, 579): #database has 2895 lines with 579 matrices
             for k in range(0, len(seg)):
                 psb = psb * a[dic[seg[k]], k]
             if psb > 0.00001:          # determine whether possibility is over the threshold
-                answer += [data[5*t] + ' ' + seg] 
+                answer += [data[5*t] + ' ' + seg]
+            psb = 1 #reset
                 
                 
         
