@@ -61,6 +61,7 @@ for t in range(0, 579): #database has 2895 lines with 579 matrices
         for j in range(0, len(seglist)):
             for k in range(0, col):
                 sc += a[dic[seglist[j][k]], k]
+                sd += a[:, k].max()
         #determine whether the score is over the threshold
             if sc/sd > trd:
                 name=re.findall(r'\t(.+?)\n',data[5*t])[0]
