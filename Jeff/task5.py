@@ -22,18 +22,13 @@ os.chdir('/Users/jefft/Desktop/ZJE/IBI(local)/git_repository/IBI_poster/Jeff') #
 
 import numpy as np
 import re
-import pandas as pd
-import math
 nmlist = []
-segment=[]
-position=[]
-possibility=[]
-score = []
 data = open('JASPARdbs.txt').readlines()
-dic = {'A':0, 'C':1, 'G':2, 'T':3}
-seq = input('Input your sequence:\n')
-trd = float(input('Input a threshold:\n'))
 
+dic = {'A':0, 'C':1, 'G':2, 'T':3}
+seq = input('Please input your sequence:\n')
+trd = float(input('Please input a threshold:\n'))
+answer = []
 for t in range(0, 579): #database has 2895 lines with 579 matrices
     nm = re.findall('\d+', data[5*t+1])    
     col = int(len(nm)) #col is the length of dna segment
