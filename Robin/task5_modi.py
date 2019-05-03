@@ -17,8 +17,8 @@ Created on Thu May  2 20:58:01 2019
 @author: IBI group1
 """
 
-#import os
-#os.chdir('/Users/jefft/Desktop/ZJE/IBI(local)/git_repository/IBI_poster/Jeff') #change working directory
+import os
+os.chdir('/Users/jefft/Desktop/ZJE/IBI(local)/git_repository/IBI_poster/Jeff') #change working directory
 
 import numpy as np
 import re
@@ -30,11 +30,11 @@ possibility=[]
 n1=[]
 n2=[]
 data = open('JASPARdbs.txt').readlines()
-
 dic = {'A':0, 'C':1, 'G':2, 'T':3}
 seq = input('Please input your sequence:\n')
 trd = float(input('Please input a threshold:\n'))
 answer = []
+
 for t in range(0, 579): #database has 2895 lines with 579 matrices
     nm = re.findall('\d+', data[5*t+1])    
     col = int(len(nm)) #col is the length of dna segment

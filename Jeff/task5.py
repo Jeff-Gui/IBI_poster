@@ -13,6 +13,20 @@ Created on Thu May  2 20:58:01 2019
 - Robin
 
 - Harper
+
+------SAMPLE HERE-------
+
+Please input your sequence:
+ATGCTTCAGAAAGGTCTTACG
+
+Please input a threshold:
+0.0001
+  position     segment     prot_name  possibility
+0     5-11     TTCAGAA          SPIB     0.000180
+1     6-12     TCAGAAA          SPIB     0.000946
+2    15-20      TCTTAC  MAFG::NFE2L1     0.000233
+3     9-17   GAAAGGTCT         SNAI2     0.000133
+4     9-18  GAAAGGTCTT         NR4A1     0.002600
         
 @author: IBI group1
 """
@@ -22,13 +36,16 @@ os.chdir('/Users/jefft/Desktop/ZJE/IBI(local)/git_repository/IBI_poster/Jeff') #
 
 import numpy as np
 import re
+import pandas as pd
 nmlist = []
+segment=[]
+position=[]
+possibility=[]
 data = open('JASPARdbs.txt').readlines()
-
 dic = {'A':0, 'C':1, 'G':2, 'T':3}
 seq = input('Please input your sequence:\n')
 trd = float(input('Please input a threshold:\n'))
-answer = []
+
 for t in range(0, 579): #database has 2895 lines with 579 matrices
     nm = re.findall('\d+', data[5*t+1])    
     col = int(len(nm)) #col is the length of dna segment
@@ -45,12 +62,18 @@ for t in range(0, 579): #database has 2895 lines with 579 matrices
         add = a[0,0]+a[1,0]+a[2,0]+a[3,0] #count the number of sample DNA sequence
         a = (1/add)*a
         psb = 1 #possibility that segment can bind with protein
-        for seg in seglist:
-            for k in range(0, len(seg)):
-                psb = psb * a[dic[seg[k]], k]
+        for j in range(0, len(seglist)):
+            for k in range(0, col):
+                psb = psb * a[dic[seglist[j][k]], k]
+               
             if psb > trd:          # determine whether possibility is over the threshold
-                answer += [data[5*t] + ' ' + seg]
+                name=re.findall(r'\t(.+?)\n',data[5*t])[0]
+                possibility.append(psb)
+                nmlist.append(name)
+                segment.append(seglist[j])
+                p=str(j+1)+'-'+str(j+col)
+                position.append(p)
             psb = 1 #reset
-                
-                
+df=pd.DataFrame({'position':position, 'segment':segment,'prot_name':nmlist,'possibility':possibility})                
+print(df)
         
