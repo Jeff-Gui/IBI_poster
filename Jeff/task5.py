@@ -22,13 +22,17 @@ os.chdir('/Users/jefft/Desktop/ZJE/IBI(local)/git_repository/IBI_poster/Jeff') #
 
 import numpy as np
 import re
+import math
+import pandas as pd
 nmlist = []
 data = open('JASPARdbs.txt').readlines()
 
 dic = {'A':0, 'C':1, 'G':2, 'T':3}
 seq = input('Please input your sequence:\n')
 trd = float(input('Please input a threshold:\n'))
-answer = []
+position = []
+segment = []
+score = []
 for t in range(0, 579): #database has 2895 lines with 579 matrices
     nm = re.findall('\d+', data[5*t+1])    
     col = int(len(nm)) #col is the length of dna segment
@@ -53,18 +57,21 @@ for t in range(0, 579): #database has 2895 lines with 579 matrices
                 temp = math.log(temp/0.25,2)
                 a[m1,m2] = temp
         sc = 0
+        sd = 0
         for j in range(0, len(seglist)):
             for k in range(0, col):
                 sc += a[dic[seglist[j][k]], k]
         #determine whether the score is over the threshold
-            if sc > trd:
+            if sc/sd > trd:
                 name=re.findall(r'\t(.+?)\n',data[5*t])[0]
-                score.append(sc)
+                score.append(sc/sd)
                 nmlist.append(name)
                 segment.append(seglist[j])
                 p=str(j+1)+'-'+str(j+col)
                 position.append(p)
-            sc = 0 #reset
+            sc = 0
+            sd = 0
+            #reset
 df=pd.DataFrame({'position':position, 'segment':segment,'prot_name':nmlist,'score':score})                
 print(df)
     
