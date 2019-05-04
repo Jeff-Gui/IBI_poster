@@ -5,31 +5,44 @@ Created on Fri Apr  5 23:07:33 2019
 
 @author: IBI group 1
 """
+
+#==============================SET UP==========================================
+import os
+wd = input('Input your working directory:\n')
+#/Users/jefft/Desktop/ZJE/IBI(local)/git_repository/IBI_poster/Jeff
+os.chdir(wd) #change working directory
+
+import math
 import re
 import numpy as np   
+import pandas as pd
 pdbs = np.array([[['F','F','L','L'],['S','S','S','S'],['Y','Y','*','*'],['C','C','*','W']],
              [['L','L','L','L'],['P','P','P','P'],['H','H','Q','Q'],['R','R','R','R']],
              [['I','I','I','M'],['T','T','T','T'],['N','N','K','K'],['S','S','R','R']],
              [['V','V','V','V'],['A','A','A','A'],['D','D','E','E'],['G','G','G','G']]])
-dic3 = {'U':0,'C':1,'A':2,'G':3}    
-#------------------------------------------------------------------------------
-        
+dic3 = {'U':0,'C':1,'A':2,'G':3}
+data = open('JASPARdbs.txt').readlines()
+seq = ''
+opt = ''
+s = 0
+t = 0
+#==============================================================================
+"""
+Main functions with corresponding task 1~5
+"""
+#===========================MAIN FUNCTIONS=====================================       
 def GC_content(x):
     count = 0
     for base in x:
         if base == 'G' or base == 'C':
             count += 1
-    print('GC content of total bases:' , '{:.2%}'.format(count/len(x)))
-    
+    print('GC content of total bases:' , '{:.2%}'.format(count/len(x)))  
 #------------------------------------------------------------------------------
-
 def cplmty(x):
     DNA=x.replace('G','c').replace('C','g').replace('A','t').replace('T','a')
     DNA=DNA[::-1]
     print('Complementary DNA strand (5\' to 3\'):\n', DNA.upper(), sep='')
-
 #------------------------------------------------------------------------------
-
 def mrna(x):
     dic2 = {'A':'U','T':'A','C':'G','G':'C'}
     mrna = ''
@@ -37,7 +50,6 @@ def mrna(x):
         mrna += dic2[base]
     mrna = mrna[::-1]
     print('mRNA sequence is:\n', mrna, sep='')
-
 #------------------------------------------------------------------------------
 def dtp(x):
     p = ''
@@ -52,20 +64,78 @@ def dtp(x):
 #------------------------------------------------------------------------------
 def tfs():
     global seq
-    
-#------------------------------------------------------------------------------
+    global data
+    nmlist = []
+    dic = {'A':0, 'C':1, 'G':2, 'T':3}
+    trd = input('Input a threshold:\n')
+    cktrd(trd)
+    trd = float(trd)
+    position = []
+    segment = []
+    score = []
+    for t in range(0, 579): #database has 2895 lines with 579 matrices
+        """
+        Generate empty PFM
+        Fragment query DNA sequence
+        """
+        nm = re.findall('\d+', data[5*t+1])    
+        col = int(len(nm)) #col is the length of dna segment
+        a = np.zeros((4,col))
+        seglist = []
+        for s in range(0,len(seq)-col+1):
+            seglist.append(seq[s:s+col])
+        """
+        Segments with the same length as the matrix are stored in seglist
+        """
+        if seglist:
+            """
+            Generate PFM
+            """
+            for i in range(5*t+1,5*t+5):
+                nm = re.findall('\d+', data[i])
+                for j in range(0,col):
+                    a[i-5*t-1,j] = int(nm[j])
+            """
+            Convert PFM to PWM
+            """
+            add = a[0,0]+a[1,0]+a[2,0]+a[3,0]
+            psdc = add**0.5 #pseudocount
+            for m1 in range(0,4):
+                for m2 in range(0,col):
+                    temp = a[m1,m2]
+                    temp = (temp+psdc/4)/(add+psdc)
+                    temp = math.log(temp/0.25,2)
+                    a[m1,m2] = temp
+            sc = 0
+            sd = 0
+            for j in range(0, len(seglist)):
+                for k in range(0, col):
+                    sc += a[dic[seglist[j][k]], k]
+                    sd += a[:, k].max()
+                    """
+                    Determine whether the score is over the threshold
+                    """
+                if sc/sd > trd:
+                    name=re.findall(r'\t(.+?)\n',data[5*t])[0]
+                    score.append(sc/sd)
+                    nmlist.append(name)
+                    segment.append(seglist[j])
+                    p=str(j+1)+'-'+str(j+col)
+                    position.append(p)
+                sc = 0
+                sd = 0 #reset
+    df=pd.DataFrame({'Segment position':position, 'Segment detected':segment,'Protein name':nmlist,'Relative score':score})                
+    print(df)
+#==============================================================================
 """
 UI
 This recursion function provides a user-friendly console interface.
 The user can call the task funcitons for any times and exit whenever he wants.
+(ui function and execute function)
 The function contains a error-detecting part to ensure the correct input.
+(validation functions)
 """
-seq = ''
-opt = ''
-opt2 = ''
-s = 0
-t = 0
-#-----------------------------MAIN FUNCTION------------------------------------
+#=============================UI FUNCTION======================================
 def ui():
     global seq
     global opt
@@ -94,11 +164,11 @@ def ui():
         else:
             tfs()
     p = input('Keep your sequence? Y/N\n')
-    if p == 'n':
+    if p == 'N' or p== 'n':
         seq = ''
         t = 0
     return 
-#------------------------------------------------------------------------------
+#===========================VALIDATION FUNCTIONS===============================
 def ckopt():
     """
     check the number input when selecting task
@@ -166,6 +236,21 @@ def ckpt():
         return True
     return True
 
-#---------------------------EXECUTE--------------------------------------------
+def cktrd(x):
+    """
+    check the number input for threshold in task5
+    """
+    try:
+        x = float(x)
+        if not 0<x<=1:
+            x = input('Please input the threshold between 0~1\n')
+            if not cktrd(x):
+                return False
+    except:
+        x = input('Please input the threshold between 0~1\n')
+        if not cktrd(x):
+            return False
+    return True
+#=============================EXECUTE FUNCTION=================================
 while s==0:
     ui()
