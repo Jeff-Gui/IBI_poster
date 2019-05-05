@@ -151,7 +151,11 @@ def ui():
         s = 1
         return
     if t == 0:
-        seq = input('Input your sequence:\n')
+        opt3 = input('Choose input mode:\n[F]:Fasta file [T]:Type in\n')
+        if opt3=='F':
+            flip()
+        else:
+            seq = input('Input your sequence:\n')
         t = 1
     if opt == 4:
         ckmrna()
@@ -188,7 +192,6 @@ def ckopt():
 def ckdna():
     """
     check DNA
-    maybe add into task 5 in the future?
     """
     global seq
     if re.search('[^ATCG]', seq):
@@ -254,6 +257,16 @@ def cktrd(x):
         if not cktrd(x):
             return False
     return True
+
+def flip():
+    global seq
+    flnm = input('Input your file name:\n')
+    a1 = open(flnm)
+    a2 = a1.read()
+    a1.close()
+    for char in a2[a2.find('\n')+2:]:
+        if char in {'A','T','C','G'}:
+            seq += char
 #=============================EXECUTE FUNCTION=================================
 while s==0:
     ui()
