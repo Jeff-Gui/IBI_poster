@@ -7,12 +7,10 @@ Created on Fri Apr  5 23:07:33 2019
 """
 
 #==============================SET UP==========================================
-"""
+
 import os
 wd = input('Input your working directory:\n')
-#/Users/jefft/Desktop/ZJE/IBI(local)/git_repository/IBI_poster/Jeff
 os.chdir(wd) #change working directory
-"""
 
 from colorama import Fore
 import math
