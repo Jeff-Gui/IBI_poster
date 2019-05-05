@@ -7,10 +7,12 @@ Created on Fri Apr  5 23:07:33 2019
 """
 
 #==============================SET UP==========================================
+"""
 import os
 wd = input('Input your working directory:\n')
 #/Users/jefft/Desktop/ZJE/IBI(local)/git_repository/IBI_poster/Jeff
 os.chdir(wd) #change working directory
+"""
 
 import math
 import re
@@ -125,6 +127,7 @@ def tfs():
                 sc = 0
                 sd = 0 #reset
     df=pd.DataFrame({'Segment position':position, 'Segment detected':segment,'Protein name':nmlist,'Relative score':score})                
+    df = df.sort_values(by=['Relative score'], ascending=False)
     print(df)
 #==============================================================================
 """
