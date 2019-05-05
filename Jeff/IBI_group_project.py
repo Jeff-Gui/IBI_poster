@@ -13,7 +13,7 @@ wd = input('Input your working directory:\n')
 #/Users/jefft/Desktop/ZJE/IBI(local)/git_repository/IBI_poster/Jeff
 os.chdir(wd) #change working directory
 """
-import colorama
+
 from colorama import Fore
 import math
 import re
