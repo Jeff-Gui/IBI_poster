@@ -13,7 +13,8 @@ wd = input('Input your working directory:\n')
 #/Users/jefft/Desktop/ZJE/IBI(local)/git_repository/IBI_poster/Jeff
 os.chdir(wd) #change working directory
 """
-
+import colorama
+from colorama import Fore
 import math
 import re
 import numpy as np   
@@ -38,12 +39,12 @@ def GC_content(x):
     for base in x:
         if base == 'G' or base == 'C':
             count += 1
-    print('GC content of total bases:' , '{:.2%}'.format(count/len(x)))  
+    print('\nGC content of total bases:' , '{:.2%}'.format(count/len(x)))  
 #------------------------------------------------------------------------------
 def cplmty(x):
     DNA=x.replace('G','c').replace('C','g').replace('A','t').replace('T','a')
     DNA=DNA[::-1]
-    print('Complementary DNA strand (5\' to 3\'):\n', DNA.upper(), sep='')
+    print('\nComplementary DNA strand (5\' to 3\'):\n', DNA.upper(), sep='')
 #------------------------------------------------------------------------------
 def mrna(x):
     dic2 = {'A':'U','T':'A','C':'G','G':'C'}
@@ -51,7 +52,7 @@ def mrna(x):
     for base in x:
         mrna += dic2[base]
     mrna = mrna[::-1]
-    print('mRNA sequence is:\n', mrna, sep='')
+    print('\nmRNA sequence is:\n', mrna, sep='')
 #------------------------------------------------------------------------------
 def dtp(x):
     p = ''
@@ -60,7 +61,7 @@ def dtp(x):
             p += pdbs[dic3[x[i]], dic3[x[i+1]], dic3[x[i+2]]]
             if p[-1] == '*':
                 break
-        print('Peptide translated from mRNA is:\n', p[:-1], sep='')
+        print('\nPeptide translated from mRNA is:\n', p[:-1], sep='')
     else:
         print('Cannot find initiation codon!')
 #------------------------------------------------------------------------------
@@ -124,11 +125,16 @@ def tfs():
                     segment.append(seglist[j])
                     p=str(j+1)+'-'+str(j+col)
                     position.append(p)
+                    print(Fore.BLACK+seq[:j],Fore.RED+seq[j:j+col],Fore.BLACK+seq[j+col:],Fore.BLUE+name)
                 sc = 0
                 sd = 0 #reset
     df=pd.DataFrame({'Segment position':position, 'Segment detected':segment,'Protein name':nmlist,'Relative score':score})                
     df = df.sort_values(by=['Relative score'], ascending=False)
-    print(df)
+    if df.empty:
+        print('\nNothing found')
+    else:
+        print(Fore.BLACK+'============================================================')   
+        print(df)
 #==============================================================================
 """
 UI
@@ -195,7 +201,7 @@ def ckdna():
     """
     global seq
     if re.search('[^ATCG]', seq):
-        seq = input('Please input the correct DNA sequence:\n')
+        misip()
         if not ckdna():
             return False
     else:
@@ -206,7 +212,7 @@ def ckmrna():
     """
     check mRNA
     assumptions:
-        1. if sequence length is not 3n, then it only contains one AUG (initial condon) and one stop condon
+        1. if sequence length is not 3n, then it only contains one AUG (initiation condon) and one stop condon
         2. if sequence length is 3n, then it is 'part' of a whole peptide
     """
     global seq
@@ -217,14 +223,14 @@ def ckmrna():
         if (len(seq)-seq2.find('GAU'))%3==0 or (len(seq)-seq2.find('AAU'))%3==0 or (len(seq)-seq2.find('AGU'))%3==0:
             return True
         else:
-            seq = input('Please input the correct mRNA sequence:\n')
+            misip()
             if not ckmrna():
                 return False
     except:         #if sequence length is times of 3
         if len(seq)%3==0 and not re.search('[^AUCG]',seq): #assume that sequence is meaningful(can be translated)
             return True
         else:
-            seq = input('Please input the correct mRNA sequence:\n')
+            misip()
             if not ckmrna():
                 return False
     return True
@@ -235,7 +241,7 @@ def ckpt():
     """
     global seq
     if re.search('[^GAVLIMFWPSTCYNQDEKRH]',seq):
-        seq = input('Please input the correct protein sequence:\n')
+        misip()
         if not ckpt():
             return False
     else:
@@ -267,6 +273,15 @@ def flip():
     for char in a2[a2.find('\n')+2:]:
         if char in {'A','T','C','G'}:
             seq += char
+
+def misip():
+    global seq
+    print('\nPlease input the correct sequence.',end='')
+    opt4 = input('Choose input mode:\n[F]:Fasta file [T]:Type in\n')
+    if opt4=='F':
+        flip()
+    else:
+        seq = input('Input your sequence:\n')
 #=============================EXECUTE FUNCTION=================================
 while s==0:
     ui()
