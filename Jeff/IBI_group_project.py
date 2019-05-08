@@ -9,8 +9,12 @@ Created on Fri Apr  5 23:07:33 2019
 #==============================SET UP==========================================
 
 import os
-wd = input('Input your working directory:\n')
-os.chdir(wd) #change working directory
+os.chdir(os.getcwd())
+try:
+    data = open('JASPARdbs.txt').readlines()
+except:
+    wd = input('Input your working directory:\n')
+    os.chdir(wd) #change working directory
 
 from colorama import Fore
 import math
@@ -22,7 +26,6 @@ pdbs = np.array([[['F','F','L','L'],['S','S','S','S'],['Y','Y','*','*'],['C','C'
              [['I','I','I','M'],['T','T','T','T'],['N','N','K','K'],['S','S','R','R']],
              [['V','V','V','V'],['A','A','A','A'],['D','D','E','E'],['G','G','G','G']]])
 dic3 = {'U':0,'C':1,'A':2,'G':3}
-data = open('JASPARdbs.txt').readlines()
 seq = ''
 opt = ''
 s = 0
@@ -66,11 +69,12 @@ def dtp(x):
 def tfs():
     global seq
     global data
+    global trd
     nmlist = []
     dic = {'A':0, 'C':1, 'G':2, 'T':3}
     trd = input('Input a threshold:\n')
-    cktrd(trd)
-    trd = float(trd)
+    cktrd()
+    #trd = floact(trd)
     position = []
     segment = []
     score = []
@@ -131,7 +135,7 @@ def tfs():
     if df.empty:
         print('\nNothing found')
     else:
-        print(Fore.BLACK+'============================================================')   
+        print(Fore.BLACK+'=================================================================')   
         print(df)
 #==============================================================================
 """
@@ -156,7 +160,7 @@ def ui():
         return
     if t == 0:
         opt3 = input('Choose input mode:\n[F]:Fasta file [T]:Type in\n')
-        if opt3=='F':
+        if opt3=='F'or opt3=='f':
             flip()
         else:
             seq = input('Input your sequence:\n')
@@ -233,32 +237,20 @@ def ckmrna():
                 return False
     return True
 
-def ckpt():
-    """
-    check protein
-    """
-    global seq
-    if re.search('[^GAVLIMFWPSTCYNQDEKRH]',seq):
-        misip()
-        if not ckpt():
-            return False
-    else:
-        return True
-    return True
-
-def cktrd(x):
+def cktrd():
     """
     check the number input for threshold in task5
     """
+    global trd
     try:
-        x = float(x)
-        if not 0<x<=1:
-            x = input('Please input the threshold between 0~1\n')
-            if not cktrd(x):
+        trd = float(trd)
+        if not 0<trd<=1:
+            trd = input('Please input the threshold between 0~1\n')
+            if not cktrd():
                 return False
     except:
-        x = input('Please input the threshold between 0~1\n')
-        if not cktrd(x):
+        trd = input('Please input the threshold between 0~1\n')
+        if not cktrd():
             return False
     return True
 
