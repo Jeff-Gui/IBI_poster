@@ -257,12 +257,15 @@ def cktrd():
 def flip():
     global seq
     flnm = input('Input your file name:\n')
-    a1 = open(flnm)
-    a2 = a1.read()
-    a1.close()
-    for char in a2[a2.find('\n')+2:]:
-        if char in {'A','T','C','G'}:
-            seq += char
+    try:    
+        a1 = open(flnm)
+        a2 = a1.read()
+        a1.close()
+        for char in a2[a2.find('\n')+2:]:
+            if char in {'A','T','C','G'}:
+                seq += char
+    except:
+        misip()
 
 def misip():
     global seq
